@@ -13,7 +13,6 @@ import time
 import json
 import threading
 import datetime
-import requests
 
 ############
 # 自创建模块 #
