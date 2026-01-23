@@ -48,18 +48,16 @@ def guide():
     print('----------------------------')
 
     ### 步骤1：配置llbot端口 ###
-    print('步骤1/4：配置llbot')
+    print('步骤1/3：配置llbot')
     config.update(first_start_guide_child.set_llbot_port.main())
 
     ### 步骤2：配置ai ###
-    print('步骤2/4：配置大模型')
+    print('步骤2/3：配置大模型')
     config.update(first_start_guide_child.set_ai.main())
 
     ### 步骤2.1（可选）：配置本地ai ###
-    print('步骤2/4：配置本地ai')
     if config['local_model']:
+        print('步骤2/3：配置本地ai')
         config.update(first_start_guide_child.set_local_model.main())
-
-    ### 步骤2.2（可选）：色色！###
 
     ### 步骤3：配置提示词 ###
