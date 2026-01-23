@@ -166,4 +166,5 @@ def main():
         'mode_random': mode_random,
         'local_mode': local_mode,
     }
+    print('----------------------------')
     return out
