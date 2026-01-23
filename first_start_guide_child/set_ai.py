@@ -37,6 +37,7 @@ def add_model():
         print(f'输入了: "{key}"')
 
         # 测试
+        print('测试api可用性...')
         try:
             openai.OpenAI(
                 api_key=key,
@@ -110,7 +111,10 @@ def main():
             else:
                 print('请输入正确的选项.')
         elif tmp == '3':
-            break
+            if len(model_list) == 0:
+                print('当前没有模型，请添加模型.')
+            else:
+                break
         else:
             print('请输入正确的选项.')
 
@@ -118,10 +122,10 @@ def main():
     print('是否随机选择模型？')
     print('此功能将使llbot在每次对话中随机选择一个模型进行对话。（随机模式）')
     print('若不使用，则按照载入顺序来尝试对话。（主备模式）')
-    print('1.是 2.否 (默认值：是)')
+    print('1.是 2.否')
     while True:
         tmp = str(input('>'))
-        if tmp == '' or tmp == '1':
+        if tmp == '1':
             mode_random = True
             print(f'选择了: "是"')
             break
@@ -164,7 +168,7 @@ def main():
     out = {
         'model_list': model_list,
         'mode_random': mode_random,
-        'local_mode': local_mode,
+        'local_model': local_mode,
     }
     print('----------------------------')
     return out

@@ -10,11 +10,11 @@
 # 第三方库 #
 ##########
 import subprocess
+import time
 import winreg
 import os
 import urllib.parse
 import requests
-import time
 import ctypes
 
 ############
@@ -121,7 +121,7 @@ def download_file(url):
         return None
 
     ### 下载 ###
-    file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
+    file_path = f'{os.getcwd()}\\{filename}'
     try:
         with requests.get(url, stream=True, timeout=60) as response:
             # 获取文件总大小
@@ -130,7 +130,7 @@ def download_file(url):
 
             # 下载的同时写入
             with open(file_path, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192):
+                for chunk in response.iter_content(chunk_size=131072):
                     if chunk:
                         f.write(chunk)
                         downloaded += len(chunk)
@@ -230,7 +230,7 @@ def main():
 
     ### 模型安装 ###
     print('检测模型是否存在')
-    ollama_list = subprocess.run(["ollama", "list"], capture_output=True, text=True, shell=True).stdout.splitlines()
+    ollama_list = subprocess.run(["ollama", "list"], capture_output=True, text=True).stdout.splitlines()
     check = False
     for i in ollama_list:
         if 'qwen3-14b-q6-k' in i:
@@ -251,7 +251,9 @@ def main():
                 with open('install.mf', 'w', encoding='utf-8') as f:
                     f.write(pull_mf)
                 subprocess.run(['ollama', 'create', 'qwen3-14b-q6-k', '-f', 'install.mf'])
+                os.remove('install.mf')
                 print('模型安装完成.')
+                break
             else:
                 print('下载失败，请检查网络设置.')
                 print('要重试吗？还是自行下载？')
@@ -274,7 +276,7 @@ def main():
         if tmp == '' or tmp == '1':
             ### 模型安装 ###
             print('检测模型是否存在')
-            ollama_list = subprocess.run(["ollama", "list"], capture_output=True, text=True,shell=True).stdout.splitlines()
+            ollama_list = subprocess.run(["ollama", "list"], capture_output=True, text=True).stdout.splitlines()
             check = False
             for i in ollama_list:
                 if 'deep-sex' in i:
@@ -293,8 +295,10 @@ def main():
                         # 安装
                         with open('install.mf', 'w', encoding='utf-8') as f:
                             f.write(pull_doi_mf)
-                        subprocess.run(['ollama', 'create', 'qwen3-14b-q6-k', '-f', 'install.mf'])
+                        subprocess.run(['ollama', 'create', 'deep-sex', '-f', 'install.mf'])
+                        os.remove('install.mf')
                         print('模型安装完成.')
+                        break
                     else:
                         print('下载失败，请检查网络设置.')
                         print('要重试吗？还是自行下载？')
@@ -329,7 +333,3 @@ def main():
     }
     print('----------------------------')
     return out
-
-
-if __name__ == '__main__':
-    main()

@@ -71,8 +71,11 @@ def main():
         while True:
             post_addres = str(input('>'))
             # 检测后面是否有 "/"
-            if post_addres[-1] != '/':
-                post_addres += '/'
+            try:
+                if post_addres[-1] != '/':
+                    post_addres += '/'
+            except:
+                pass
             print(f'输入了: "{post_addres}"')
             # 验证
             print('验证地址是否有效...')
@@ -156,5 +159,6 @@ def main():
                 return out
             elif tmp == '2':
                 print('重新填写...')
+                break
             else:
                 print('请输入正确的选项.')

@@ -25,7 +25,7 @@ def aiq_start():
 
     ### 读取文件 ###
     try:
-        with open('config.ppp', 'rw') as f:
+        with open('config.ppp', 'rb') as f:
             config = pickle.load(f)
     except:
         # 读取失败，重新创建
@@ -33,7 +33,10 @@ def aiq_start():
         print('可能是第一次启动，亦或者是文件损坏.')
         print('点击Enter创建（新的）配置文件...')
         input('>|')
-        first_start_guide.guide()
+        config = first_start_guide.guide()
+        print('初始化...')
+        print('>|')
+    print(config)
 
 if __name__ == '__main__':
     aiq_start()
