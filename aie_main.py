@@ -83,7 +83,6 @@ def msg_store():
 
     ### 启动fastapi ###
     log('启动fastapi.')
-    # 这个要将target_account修改成user_id
     ps_fastapi = multiprocessing.Process(target=msg_receive.main, args=(config['port'], msg_queue, cmd_queue, config['user_id']))
     ps_fastapi.start()
 
@@ -102,11 +101,28 @@ def msg_store():
 
                 # 用户
                 elif tmp['type'] == 'user':
-                    if len(tmp['msg']) == 1 and tmp['raw_msg'][0] != '[':
+
+                    print(f'收到消息：{tmp["msg"]}')
+                    # 遍历处理消息
+                    msg = ''
+                    for i in tmp['msg']:
+                        ### 文本 ###
+                        if i['type'] == 'text':
+                            msg += i['data']['text']
+                            msg += '\n'
+                        ### 回复 ###
+                        if i['type'] == 'reply':
+                            # 获取原信息
+                            text = send_api.get_msg(config['post_addres'], i['data']['id'])
+                            msg += f'(回复 "{config['assistant_name']}" : {text})'
+                            msg += '\n'
+                    msg = msg[:-1]
+                    # 添加
+                    if msg:
                         log(f'收到消息：{tmp['raw_msg']}')
                         msg_list.append({
                             'type': 'user',
-                            'msg': tmp['raw_msg'],
+                            'msg': msg,
                             'msg_id': tmp['msg_id'],
                             'time': tmp['time'],
                         })
@@ -135,14 +151,6 @@ def msg_store():
                                 # 头为0则直接添加
                                 if len(msg_list) - 1 - i == 0:
                                     last_doi_list_range = 0
-                                    print(f'用户最后发言指针：{last_doi_list_range}')
-                                    print('----------------------')
-                                    print(f'{msg_list[last_doi_list_range]} ←--')
-                                    try:
-                                        print(msg_list[last_doi_list_range + 1])
-                                    except:
-                                        pass
-                                    print('----------------------')
                                 else:
                                     # 标记
                                     e = True
@@ -163,7 +171,6 @@ def msg_store():
                                         pass
                                     print('----------------------')
                                     break
-
                     # 普通消息
                     else:
                         # 发送
@@ -172,7 +179,6 @@ def msg_store():
                             log(f'发送失败：{r}')
                             continue
                         msg_list.append(tmp)
-
 
                 # 系统消息
                 elif tmp['type'] == 'system':
@@ -432,7 +438,7 @@ def assistant_core():
 ########
 def main(input_config):
 
-    log('AIQ启动.')
+    log('aie启动.')
 
     ### 配置变量 ###
     global config

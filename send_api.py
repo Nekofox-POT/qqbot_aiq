@@ -34,7 +34,22 @@ def send_private_msg(host, user_id, msg):
         if r['status'] != 'ok':
             return r
     except Exception as e:
-        print(e)
         return e
     else:
+        return None
+
+##############
+# 获取消息文本 #
+#############
+def get_msg(host, message_id):
+    try:
+        r = json.loads(requests.post(f'{host}get_msg', data={
+            'message_id': message_id,
+        }).text)
+        if r['status'] == 'ok':
+            return r['message']
+        else:
+            return None
+    except Exception as e:
+        print(e)
         return None
